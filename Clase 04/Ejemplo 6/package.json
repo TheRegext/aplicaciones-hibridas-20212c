@@ -1,0 +1,19 @@
+{
+  "name": "ejemplo-4",
+  "version": "1.0.0",
+  "description": "Mi Proyecto en NPM",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "start": "",
+    "dev": "node suma.js",
+    "server": "nodemon cafe.js",
+    "build": "",
+    "test": ""
+  },
+  "author": "Brian Lara",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

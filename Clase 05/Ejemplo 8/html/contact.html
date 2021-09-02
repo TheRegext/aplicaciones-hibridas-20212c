@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/contact" method="POST">
+        <label>
+            Email: <input type="email" name="email" />
+        </label>
+        <label>
+            Nombre: <input type="text" name="name"/>
+        </label>
+        <button type="submit">Enviar</button>
+    </form>
+
+    <h2>{{NOMBRE}}</h2>
+    <h3>{{EMAIL}}</h3>
+</body>
+</html>
