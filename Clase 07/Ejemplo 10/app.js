@@ -1,0 +1,168 @@
+import express from 'express'
+import { promises } from 'fs'
+
+const app = express()
+
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+
+app.get('/personajes', function (req, res) {
+    promises.readFile('./data/personajes.json')
+        .then(function (data) {
+            const personajes = JSON.parse(data.toString())
+
+            res.status(200).json(personajes.filter(function (element) {
+                return element.deleted != true
+            }))
+
+
+            // funcion lambda => paradigma funcional 
+            // res.status(200).json(personajes.filter(element => element.deleted != true))
+
+
+        })
+        .catch(function (err) {
+            res.status(500)
+            res.json({ err: 500, msg: err.message })
+        })
+})
+
+app.get('/personajes/:id', function (req, res) {
+    promises.readFile('./data/personajes.json')
+        .then(function (data) {
+            const personajes = JSON.parse(data.toString())
+            const per = personajes.find(function (p) {
+                return p.id == req.params.id
+            })
+
+            if (per) {
+                if (per.deleted != true) {
+                    res.status(200).json(per)
+                }
+                else {
+                    res.status(404).json({ err: 404, msg: `El personaje #${req.params.id} fue eliminado.` })
+                }
+            }
+            else {
+                res.status(404).json({ err: 404, msg: `No se encuentra el personaje #${req.params.id}` })
+            }
+
+        })
+        .catch(function (err) {
+            res.status(500)
+            res.json({ err: 500, msg: err.message })
+        })
+})
+
+app.post('/personajes', function (req, res) {
+    promises.readFile('./data/personajes.json')
+        .then(function (data) {
+            const personajes = JSON.parse(data.toString())
+            const per = req.body
+            per.id = personajes.length + 1
+
+            personajes.push(per);
+
+            promises.writeFile('./data/personajes.json', JSON.stringify(personajes))
+                .then(function () {
+                    res.status(201).json(per)
+                })
+        })
+        .catch(function (err) {
+            res.status(500)
+            res.json({ err: 500, msg: err.message })
+        })
+})
+
+app.put('/personajes/:id', function (req, res) {
+    promises.readFile('./data/personajes.json')
+        .then(function (data) {
+            const personajes = JSON.parse(data.toString())
+            let per = personajes.find(function (p) {
+                return p.id == req.params.id
+            })
+
+            if (per?.deleted != true) {
+
+                const index = personajes.indexOf(per)
+                personajes[index] = { ...req.body, id: parseInt(req.params.id) }
+
+                // per = { ...req.body, id: per.id }
+                
+                promises.writeFile('./data/personajes.json', JSON.stringify(personajes))
+                    .then(function () {
+                        res.status(200).json(personajes[index])
+                    })
+            }
+            else {
+                res.status(404).json({ err: 404, msg: `No se encuentra el personaje #${req.params.id}` })
+            }
+
+        })
+        .catch(function (err) {
+            res.status(500)
+            res.json({ err: 500, msg: err.message })
+        })
+})
+
+app.patch('/personajes/:id', function (req, res) {
+    promises.readFile('./data/personajes.json')
+        .then(function (data) {
+            const personajes = JSON.parse(data.toString())
+            let per = personajes.find(function (p) {
+                return p.id == req.params.id
+            })
+
+            if (per) {
+
+                const index = personajes.indexOf(per)
+                personajes[index] = {...personajes[index],  ...req.body, id: per.id }
+
+                promises.writeFile('./data/personajes.json', JSON.stringify(personajes))
+                    .then(function () {
+                        res.status(200).json(personajes[index])
+                    })
+            }
+            else {
+                res.status(404).json({ err: 404, msg: `No se encuentra el personaje #${req.params.id}` })
+            }
+
+        })
+        .catch(function (err) {
+            res.status(500)
+            res.json({ err: 500, msg: err.message })
+        })
+})
+
+app.delete('/personajes/:id', function (req, res) {
+    promises.readFile('./data/personajes.json')
+        .then(function (data) {
+            const personajes = JSON.parse(data.toString())
+            const per = personajes.find(function (p) {
+                return p.id == req.params.id
+            })
+
+            if (per) {
+                per.deleted = true
+
+                promises.writeFile('./data/personajes.json', JSON.stringify(personajes))
+                    .then(function () {
+                        res.status(200).json(per)
+                    })
+            }
+            else {
+                res.status(404).json({ err: 404, msg: `No se encuentra el personaje #${req.params.id}` })
+            }
+
+        })
+        .catch(function (err) {
+            res.status(500)
+            res.json({ err: 500, msg: err.message })
+        })
+})
+
+
+app.listen(80, function () {
+    console.log("Server ON!")
+})
+

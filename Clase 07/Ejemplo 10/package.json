@@ -1,0 +1,12 @@
+{
+  "name": "ejemplo-9",
+  "version": "1.0.0",
+  "description": "Mi API",
+  "type": "module",
+  "scripts": {
+    "server": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
