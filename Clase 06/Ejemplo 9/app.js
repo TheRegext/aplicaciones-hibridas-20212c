@@ -23,10 +23,14 @@ app.get('/personajes/:id', function(req, res){
     promises.readFile('./data/personajes.json')
     .then(function(data){
         const personajes = JSON.parse(data.toString())
-        const per = personajes.find(function(p){
-            return p.id == req.params.id
-        } )
+        const per = 
+        
+        
+        personajes.find(function(p){
+                        return p.id == req.params.id
+                    })
 
+               
         if(per){
             res.status(200).json(per)
         }
