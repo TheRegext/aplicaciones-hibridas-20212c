@@ -1,22 +1,33 @@
-import logo from './logo.svg';
 import './App.css';
-import Button from './components/Button'
-import ButtonMagic from './components/ButtonMagic';
+import React from 'react'
+import Contador from './components/Contador'
+import DigimonView from './components/DigimonView';
 
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <Button pedro="Texto del Boton"/>
-        <ButtonMagic />
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      text: "Texto"
+    }
+  }
+
+  cambiar(){
+    this.setState({
+      text: "Nuevo Texto"
+    })
+  }
+  
+  render(){
+    return (
+      <div className="App">
+        <Contador text={this.state.text} />
+        <button onClick={()=>this.cambiar()}>{this.state.text}</button>
+        <DigimonView />
+      </div>
+    );
+  }
+  
 }
 
 export default App;

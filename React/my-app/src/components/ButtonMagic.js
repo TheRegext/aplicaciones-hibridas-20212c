@@ -11,17 +11,14 @@ class ButtonMagic extends React.Component{
     }
 
     cambiar(){
-        
         this.setState({
             text: 'Nuevo Valor'
         })
-        
-        //this.state.text = 'Nuevo Valor'
     }
 
     render(){
         return (
-            <button onClick={()=>{this.cambiar()}}>{this.state.text}</button>
+            <button onClick={this.cambiar}>{this.state.text}</button>
         )
     }
 }

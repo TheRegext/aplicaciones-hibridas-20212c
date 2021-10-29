@@ -1,0 +1,14 @@
+.ListItem{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.ListItem > img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
