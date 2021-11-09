@@ -1,29 +1,35 @@
 import './App.css';
 import React from 'react'
-import Contador from './components/Contador'
-import DigimonView from './components/DigimonView';
+import Button from './components/Button'
+//import Contador from './components/Contador'
+//import DigimonView from './components/DigimonView';
 
 
 class App extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      text: "Texto"
+      text: true
     }
+
+  }
+
+  componentDidMount(){
+    setTimeout(()=>{
+      this.cambiar()
+    }, 5000)
   }
 
   cambiar(){
     this.setState({
-      text: "Nuevo Texto"
+      text: false
     })
   }
   
   render(){
     return (
       <div className="App">
-        <Contador text={this.state.text} />
-        <button onClick={()=>this.cambiar()}>{this.state.text}</button>
-        <DigimonView />
+        {this.state.text && <Button></Button>}
       </div>
     );
   }

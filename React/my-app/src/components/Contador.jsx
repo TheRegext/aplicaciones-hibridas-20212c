@@ -2,6 +2,7 @@ import React from 'react'
 
 class Contador extends React.Component {
 
+	// Cuando se crea el objeto se llama al constructor
     constructor(props) {
         super(props)
         console.log("Contador::constructor")
@@ -25,16 +26,19 @@ class Contador extends React.Component {
     }
 
 
-    // Justo despues de crear el componente
+    // Justo despues de montar el componente en el VDOM 
     componentDidMount() {
         console.log("Contador::componentDidMount")
     }
   
-    // Justo antes de matar el componente
+    // Justo antes de desmontar el componente del VDOM 
     componentWillUnmount() {
         console.log("Contador::componentWillUnmount")
     }
 
+	// Cada vez que se dibuja se llama a render
+    // Cada vez que cambia el estado, se llama a render
+    // Cada vez que cambia una propriedad se llama a render
     render() {
         console.log("Contador::Render")
         return (

@@ -18,7 +18,7 @@ class ButtonMagic extends React.Component{
 
     render(){
         return (
-            <button onClick={this.cambiar}>{this.state.text}</button>
+            <button onClick={this.cambiar}>{this.state.text}{this.props.children}</button>
         )
     }
 }
