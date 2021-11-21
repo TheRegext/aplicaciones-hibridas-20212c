@@ -1,18 +1,19 @@
 import authDao from "../model/auth.dao.js";
-import jwt from 'jsonwebtoken'
+import { generate } from "../middleware/tokeValidator.js";
 
 function login(req, res){
     authDao.login(req.body.email, req.body.password)
     .then(function (data){
 
-        const token = jwt.sign({
+        console.log(data)
+        const token = generate({
             id: data.id,
             name: data.name,
             email: data.email
-        },"SECRETO")
+        })
 
 
-        res.header('auth-token', token).json(data)
+        res.header('auth-token', token).json({user: data, token: token})
     })
     .catch(function(err){
         if(err.error){
@@ -46,7 +47,28 @@ function register(req, res) {
         })
 }
 
+export function findAll(req, res){
+    authDao.findAll()
+    .then(function(result){
+        res.json(result)
+    })
+    .catch(function (err) {
+        if(err.error){
+            res.status(400).json({ error: 400, msg: err.msg })
+        }
+        else{
+            res.status(500).json({ error: 500, msg: "Ocurrio un error", err })
+        }
+    })
+}
+
+export function getLogin(req, res){
+    res.json(req.user)
+}
+
 export default {
     register,
-    login
+    login,
+    findAll,
+    getLogin
 }
