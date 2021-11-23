@@ -1,15 +1,38 @@
 import { Link } from 'react-router-dom';
+import { useProducts, ProductsProvider } from '../context/Products.Context';
 
-function Products(props) {
+function ProductListItem(props) {
+    const { products, remove } = useProducts();
+
+    return (
+        <li>
+            <Link to={`/products/${props.product.id}`}>{props.product.id}/{products.length} - {props.product.name}</Link>
+            <button onClick={() => { remove(props.product) }}>Eliminar</button>
+        </li>
+    )
+}
+
+function ProductList() {
+    const { products } = useProducts();
+
+    return (
+        <ul>
+            {products.map(product => (
+                <ProductListItem key={product.id} product={product} />
+            ))}
+        </ul>
+    )
+}
+
+
+function ProductsPage(props) {
     return (
         <div>
             <h1>Products</h1>
-            <ul>
-                <li><Link to="/products/1" >Producto 1</Link></li>
-                <li><Link to="/products/2" >Producto 2</Link></li>
-                <li><Link to="/products/3" >Producto 3</Link></li>
-            </ul>
+            <ProductsProvider >
+                <ProductList />
+            </ProductsProvider>
         </div>
     )
 }
-export default Products;
+export default ProductsPage;
