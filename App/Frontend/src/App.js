@@ -5,45 +5,57 @@ import Home from './pages/Home';
 import Products from './pages/Products';
 import Product from './pages/Product';
 import Login from './pages/Login'
+import { useAuth } from './context/Auth.Context'
+//import Chat from './pages/Chat'
 
 
-function AuthRoute(props) {
-  return props.isAuthenticated ? props.children : <Navigate to="/login" />
+
+function AuthRoute({ children }) {
+  const { state } = useAuth()
+  return state.isAuthenticated ? children : <Navigate to="/login" />
 }
 
-function AuthDiv(props) {
-  return props.isAuthenticated ? props.children : null
+function AuthDiv({ children }) {
+  const { state } = useAuth()
+  return state.isAuthenticated ? children : null
 }
 
 
 function App(props) {
+  const auth = useAuth()
 
-  const [isAuthenticated, setAuthenticated] = useState(false)
   let navigate = useNavigate();
 
-
-  const handleLogin = () => {
-    setAuthenticated(true)
-    navigate('/', { replace: true })
-  }
-
+  useEffect(() => {
+    if (auth.state.isAuthenticated) {
+      navigate('/')
+    }
+    else {
+      navigate('/login')
+    }
+  }, [auth.state])
 
   useEffect(() => {
-    localStorage.getItem('token') ? handleLogin() : setAuthenticated(false)
+    if (localStorage.getItem('token') && localStorage.getItem('user')) {
+      const user = JSON.parse(localStorage.getItem('user'))
+      auth.dispatch({ type: 'LOGIN', payload: user })
+    }
   }, [])
 
   return (
     <div className="App">
       <h1>Este es el titulo de mi pagina web</h1>
-      <AuthDiv isAuthenticated={isAuthenticated}>
+      <AuthDiv>
         <nav>
           <ul>
             <li>
               <Link to="/">Home</Link>
             </li>
+
             <li>
               <Link to="/login">Login</Link>
             </li>
+
             <li>
               <Link to="/products">Products</Link>
             </li>
@@ -52,14 +64,17 @@ function App(props) {
       </AuthDiv>
       <Routes>
         <Route path="/" element={
-          <AuthRoute isAuthenticated={isAuthenticated}><Home /></AuthRoute>
+          <AuthRoute><Home /></AuthRoute>
         } />
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/products" element={
-          <AuthRoute isAuthenticated={isAuthenticated}><Products /></AuthRoute>
+          <AuthRoute><Products /></AuthRoute>
         } />
         <Route path="/products/:id" element={<Product />} />
+
+
         <Route path="/404" element={<h1>Bloqueado por bobi</h1>} />
+
         <Route path="*" element={<Navigate to="/404" />} />
       </Routes>
     </div>

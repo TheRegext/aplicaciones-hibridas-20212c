@@ -1,16 +1,27 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useReducer } from "react";
+import API from '../api/product.api'
+import ProductReducer from "../reducer/Products.Reducer";
+import { ProductAdd, ProductRemove } from "../action/Product.Actions";
 
 const ProductsContext = createContext();
+// action tiene dos valores type y payload
+
 
 export function ProductsProvider(props) {
-    const [products, setProducts] = useState([{ id: 1, name: 'Product 1' }, { id: 2, name: 'Product 2' }, { id: 3, name: 'Product 3' }, { id: 4, name: 'Product 4' }, { id: 5, name: 'Product 5' }]);
+    const [state, dispatch] = useReducer(ProductReducer, []);
 
-    const remove = (product) => {
-        setProducts(products.filter(p => p.id !== product.id));
+    const remove =  async (product) => {
+        dispatch(ProductRemove(product));
+                
+        return API.deleteProduct(product.id)
+        .catch(() => {  
+            dispatch(ProductAdd(product));
+            throw new Error('Error al eliminar el producto');
+        });
     }
 
     return (
-        <ProductsContext.Provider value={{ products, setProducts, remove }}>
+        <ProductsContext.Provider value={{ state, dispatch, remove }}>
             {props.children}
         </ProductsContext.Provider>
     );

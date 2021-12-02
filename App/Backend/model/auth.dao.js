@@ -1,6 +1,9 @@
 import { conection } from "./conection.js"
 import bcrypt from 'bcrypt'
 
+
+
+
 async function login(email, password) {
     return await conection(async function (db) {
         const user = await db.collection('Users').findOne({ email: email })
@@ -25,6 +28,10 @@ async function login(email, password) {
 
     })
 }
+
+// {email: "", password: "", name: ""} ts
+
+
 
 async function register(user) {
     return await conection(async function (db) {

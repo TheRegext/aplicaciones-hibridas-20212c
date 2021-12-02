@@ -1,5 +1,6 @@
 import authDao from "../model/auth.dao.js";
 import { generate } from "../middleware/tokeValidator.js";
+import * as yup from 'yup'
 
 function login(req, res){
     authDao.login(req.body.email, req.body.password)
@@ -25,14 +26,18 @@ function login(req, res){
     })
 }
 
-function register(req, res) {
-    const user = {
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-    }
+const schema = yup.object({
+    email: yup.string().email().required("El email es obligatorio JEJE"),
+    password: yup.string().min(6).required(),
+    name: yup.string().required()
+}).noUnknown()
 
-    authDao.register(user)
+function register(req, res) {
+    
+    schema.validate(req.body)
+    .then(function (data){
+        console.log("Validate: ", data)
+        authDao.register(data)
         .then(function () {
             res.json({ msg: "Usuario registrado con exito!" })
         })
@@ -45,6 +50,12 @@ function register(req, res) {
             }
             
         })
+    })
+    .catch(function(err){
+        res.status(400).json({ error: 400, msg: "Error en los datos", err: err.errors })
+    })
+
+    
 }
 
 export function findAll(req, res){
